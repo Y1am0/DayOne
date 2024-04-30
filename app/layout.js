@@ -1,5 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Menubar/header";
+import MenuBar from "@/components/Menubar/menuBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +13,18 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+      ></meta>
+      <body className={inter.className}>
+        <div className="flex flex-col h-screen">
+          <Header />
+          {children}
+          <MenuBar />
+        </div>
+      </body>
     </html>
   );
 }
