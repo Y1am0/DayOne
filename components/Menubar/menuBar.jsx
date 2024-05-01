@@ -1,11 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import UserAvatar from "../userAvatar";
 
 const MenuBar = () => {
+  // const user = session.data?.user;
+
   return (
-    <div className="h-36 absolute bottom-0 bg-black w-full flex justify-around">
+    <div className="h-36 fixed bottom-0 bg-black w-full flex justify-around">
       <button>
-        <Image src={"/user.svg"} width={24} height={24} alt="users icon" />
+        <UserAvatar />
       </button>
       <button>
         <Image

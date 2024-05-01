@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Header = () => {
   return (
-    <div className="absolute top-0 h-24 bg-black w-full grid place-content-center">
+    <div className="h-36 fixed z-10 bg-black w-full grid place-content-center">
       <Image src={"/logo.png"} width={27} height={38} alt="Logo" />
     </div>
   );
