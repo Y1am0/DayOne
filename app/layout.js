@@ -19,9 +19,11 @@ export default function RootLayout({ children }) {
         content="black-translucent"
       ></meta>
       <body className={inter.className}>
-        <div className="flex flex-col h-screen">
+        <div className="">
           <Header />
-          {children}
+          <div className="relative h-full pt-36 overflow-y-scroll">
+            {children}
+          </div>
           <MenuBar />
         </div>
       </body>

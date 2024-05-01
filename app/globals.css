@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  height: 100%;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
@@ -16,6 +17,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  color: white;
 }
 
 @layer utilities {
