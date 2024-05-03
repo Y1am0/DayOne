@@ -6,7 +6,7 @@ const MenuBar = () => {
   // const user = session.data?.user;
 
   return (
-    <div className="h-36 fixed bottom-0 bg-black w-full flex justify-around">
+    <div className="h-36 fixed bottom-0 z-10 bg-black w-full flex justify-around">
       <button>
         <UserAvatar />
       </button>
@@ -18,13 +18,16 @@ const MenuBar = () => {
           alt="overview icon"
         />
       </button>
+
       <button>
-        <Image
-          src={"/settings.svg"}
-          width={24}
-          height={24}
-          alt="settigns icon"
-        />
+        <Link href="/settings">
+          <Image
+            src={"/settings.svg"}
+            width={24}
+            height={24}
+            alt="settigns icon"
+          />
+        </Link>
       </button>
     </div>
   );

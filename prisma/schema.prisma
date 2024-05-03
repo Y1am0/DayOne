@@ -15,6 +15,8 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
+  Habit         Habit[]
+  Point         Point[]
 }
 
 model Account {
@@ -34,4 +36,43 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+}
+
+model Habit {
+  id           String     @id @default(cuid())
+  userId       String     @map("user_id")
+  title        String
+  difficulty   Difficulty
+  timesPerWeek Int
+  color        String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyLogs    DailyLog[]
+}
+
+model DailyLog {
+  id      String   @id @default(cuid())
+  habitId String   @map("habit_id")
+  date    DateTime
+  status  Status
+  habit   Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+}
+
+enum Difficulty {
+  VERY_HARD
+  HARD
+  TYPICAL
+}
+
+enum Status {
+  COMPLETE
+  PLANNED_SKIP
+  SKIPPED
+}
+
+model Point {
+  id     String   @id @default(cuid())
+  userId String   @map("user_id")
+  points Int
+  date   DateTime
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

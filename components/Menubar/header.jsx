@@ -1,9 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Header = () => {
   return (
-    <div className="h-36 fixed z-10 bg-black w-full grid place-content-center">
-      <Image src={"/logo.png"} width={27} height={38} alt="Logo" />
+    <div className="h-36 top-0 fixed z-10 bg-black w-full flex items-center justify-center">
+      <Link href="/">
+        <Image src={"/logo.png"} width={27} height={38} alt="Logo" />
+      </Link>
     </div>
   );
 };

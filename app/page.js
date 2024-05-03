@@ -1,8 +1,7 @@
-import { auth } from "@/auth";
-import Habits from "@/components/habits";
+import HabitsView from "@/components/habits";
 
 const Home = () => {
-  return <Habits />;
+  return <HabitsView />;
 };
 
 export default Home;
