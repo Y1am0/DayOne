@@ -1,8 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import IncrementCounter from "./buttonPage";
 
 const HabitsView = () => {
   const [habits, setHabits] = useState([]);
+  const [currentLogId, setCurrentLogId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -78,6 +80,56 @@ const HabitsView = () => {
     }
   };
 
+  const handleEditLog = async (logId) => {
+    setCurrentLogId(logId); // Set the current log ID
+
+    // Optionally, you can also set this with a slight delay or ensure updateLog uses the newly set ID correctly
+    await updateLog(logId); // Call update logic immediately
+  };
+
+  const updateLog = async (logId) => {
+    const logData = {
+      id: logId || currentLogId, // Use passed logId or fallback to currentLogId
+      status: "SKIPPED",
+    };
+
+    try {
+      const response = await fetch("/api/habits/add_logs", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(logData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to edit log");
+      }
+      fetchHabits();
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const deleteHabit = async (habitId) => {
+    try {
+      const response = await fetch("/api/habits/view_habits", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: habitId }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      fetchHabits();
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   if (loading)
     return <div className="grid place-content-center">Loading...</div>;
   if (error)
@@ -85,37 +137,66 @@ const HabitsView = () => {
 
   return (
     <div className="grid place-content-center flex-col m-auto">
-      {habits.length === 0 ? (
-        <div>
-          <p>
-            No habits found. Would you like to{" "}
-            <button onClick={addHabit} className="underline text-blue-600">
-              create one?
-            </button>
-          </p>
+      <div>
+        {habits.length === 0 ? (
+          <div>
+            <p>
+              No habits found. Would you like to{" "}
+              <button onClick={addHabit} className="underline text-blue-600">
+                create one?
+              </button>
+            </p>
+          </div>
+        ) : (
+          <ul className="text-white">
+            {habits.map((habit) => (
+              <>
+                <div className="flex flex-col">
+                  <li key={habit.id}>{habit.title}</li>
+                  <li>
+                    {" "}
+                    <button
+                      onClick={() => deleteHabit(habit.id)}
+                      className="text-xs underline"
+                    >
+                      Delete Habit
+                    </button>{" "}
+                  </li>
+                  <li> {habit.dailyLogs?.[0]?.status} </li>
+                  <li>
+                    {habit.dailyLogs &&
+                      habit.dailyLogs.map((log) => (
+                        <button
+                          key={log.id}
+                          onClick={() => handleEditLog(log.id)}
+                          className="text-xs underline"
+                        >
+                          Edit Log
+                        </button>
+                      ))}
+                  </li>
+                </div>
+              </>
+            ))}
+          </ul>
+        )}
+        <div className="flex flex-col">
+          <button
+            onClick={addHabit}
+            className="mb-4 p-2 bg-blue-500 text-white rounded"
+          >
+            Add New Habit
+          </button>
+          <button
+            onClick={addLog}
+            className="mb-4 p-2 bg-blue-500 text-white rounded"
+          >
+            Add Log
+          </button>
         </div>
-      ) : (
-        <ul className="text-white">
-          {habits.map((habit) => (
-            <>
-              <li key={habit.id}>{habit.title}</li>
-              <li> {habit.dailyLogs?.[0]?.status} </li>
-            </>
-          ))}
-        </ul>
-      )}
-      <button
-        onClick={addHabit}
-        className="mb-4 p-2 bg-blue-500 text-white rounded"
-      >
-        Add New Habit
-      </button>
-      <button
-        onClick={addLog}
-        className="mb-4 p-2 bg-blue-500 text-white rounded"
-      >
-        Add Log
-      </button>
+
+        <IncrementCounter />
+      </div>
     </div>
   );
 };

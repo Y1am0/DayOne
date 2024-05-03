@@ -1,4 +1,4 @@
-import { addLog } from "@/lib/dbHabits";
+import { addLog, updateLog } from "@/lib/dbHabits";
 
 export async function POST(request) {
   try {
@@ -24,10 +24,11 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const logData = await request.json();
-    const newLog = await addLog({
-      ...logData,
-    });
-    return new Response(JSON.stringify(newLog), {
+    if (!logData.id) {
+      throw new Error("Log ID is required for editing.");
+    }
+    const updatedLog = await updateLog(logData.id, logData);
+    return new Response(JSON.stringify(updatedLog), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {

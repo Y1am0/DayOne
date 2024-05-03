@@ -1,4 +1,4 @@
-import { getHabits, addHabit } from "/lib/dbhabits";
+import { getHabits, addHabit, deleteHabit } from "/lib/dbhabits";
 import { authenticate } from "@/utils/authenticate";
 
 export async function GET(request) {
@@ -38,6 +38,24 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error("Failed to add habit:", error);
+    return new Response(
+      JSON.stringify({ error: error.message || "Internal Server Error" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    const deletedHabit = await deleteHabit(habitId);
+    return new Response(JSON.stringify(deletedHabit), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Failed to delete habit:", error);
     return new Response(
       JSON.stringify({ error: error.message || "Internal Server Error" }),
       {
