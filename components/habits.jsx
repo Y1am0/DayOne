@@ -54,9 +54,9 @@ const HabitsView = () => {
     }
   };
 
-  const addLog = async () => {
+  const addLog = async (habitId) => {
     const logData = {
-      habitId: "clvqjdc50000jn9du75x77ueq",
+      habitId: habitId,
       date: new Date().toISOString(),
       status: "COMPLETE",
     };
@@ -81,15 +81,13 @@ const HabitsView = () => {
   };
 
   const handleEditLog = async (logId) => {
-    setCurrentLogId(logId); // Set the current log ID
-
-    // Optionally, you can also set this with a slight delay or ensure updateLog uses the newly set ID correctly
-    await updateLog(logId); // Call update logic immediately
+    setCurrentLogId(logId);
+    await updateLog(logId);
   };
 
   const updateLog = async (logId) => {
     const logData = {
-      id: logId || currentLogId, // Use passed logId or fallback to currentLogId
+      id: logId,
       status: "SKIPPED",
     };
 
@@ -137,15 +135,10 @@ const HabitsView = () => {
 
   return (
     <div className="grid place-content-center flex-col m-auto">
-      <div>
+      <div className="flex flex-col gap-y-4">
         {habits.length === 0 ? (
-          <div>
-            <p>
-              No habits found. Would you like to{" "}
-              <button onClick={addHabit} className="underline text-blue-600">
-                create one?
-              </button>
-            </p>
+          <div className="text-center">
+            <p>No habits found</p>
           </div>
         ) : (
           <ul className="text-white">
@@ -154,7 +147,12 @@ const HabitsView = () => {
                 <div className="flex flex-col">
                   <li key={habit.id}>{habit.title}</li>
                   <li>
-                    {" "}
+                    <button
+                      onClick={() => addLog(habit.id)}
+                      className="mb-4 p-2 bg-blue-500 text-white rounded"
+                    >
+                      Add Log
+                    </button>
                     <button
                       onClick={() => deleteHabit(habit.id)}
                       className="text-xs underline"
@@ -187,15 +185,9 @@ const HabitsView = () => {
           >
             Add New Habit
           </button>
-          <button
-            onClick={addLog}
-            className="mb-4 p-2 bg-blue-500 text-white rounded"
-          >
-            Add Log
-          </button>
         </div>
 
-        <IncrementCounter />
+        {/* <IncrementCounter /> */}
       </div>
     </div>
   );

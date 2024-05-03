@@ -4,7 +4,6 @@ import { authenticate } from "@/utils/authenticate";
 export async function GET(request) {
   try {
     const userSession = await authenticate(request);
-
     const habits = await getHabits(userSession.user.id);
 
     return new Response(JSON.stringify(habits), {
@@ -50,8 +49,9 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   try {
-    const deletedHabit = await deleteHabit(habitId);
-    return new Response(JSON.stringify(deletedHabit), {
+    const removeHabit = await request.json();
+    const remove = await deleteHabit(removeHabit.id);
+    return new Response(JSON.stringify(remove), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
