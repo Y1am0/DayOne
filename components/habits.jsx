@@ -14,7 +14,7 @@ const HabitsView = () => {
 
   const fetchHabits = async () => {
     try {
-      const response = await fetch("/api/habits/view_habits");
+      const response = await fetch("/api/habits/habits");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -36,7 +36,7 @@ const HabitsView = () => {
     };
 
     try {
-      const response = await fetch("/api/habits/view_habits", {
+      const response = await fetch("/api/habits/habits", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +62,7 @@ const HabitsView = () => {
     };
 
     try {
-      const response = await fetch("/api/habits/add_logs", {
+      const response = await fetch("/api/habits/habit_logs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ const HabitsView = () => {
     };
 
     try {
-      const response = await fetch("/api/habits/add_logs", {
+      const response = await fetch("/api/habits/habit_logs", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const HabitsView = () => {
 
   const deleteHabit = async (habitId) => {
     try {
-      const response = await fetch("/api/habits/view_habits", {
+      const response = await fetch("/api/habits/habits", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

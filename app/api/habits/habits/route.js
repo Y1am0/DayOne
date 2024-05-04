@@ -1,4 +1,4 @@
-import { getHabits, addHabit, deleteHabit } from "/lib/dbhabits";
+import { getHabits, addHabit, deleteHabit } from "@/lib/dbHabits";
 import { authenticate } from "@/utils/authenticate";
 
 export async function GET(request) {
@@ -10,6 +10,7 @@ export async function GET(request) {
       headers: {
         "Content-Type": "application/json",
       },
+      status: 200,
     });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
