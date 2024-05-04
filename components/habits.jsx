@@ -1,201 +1,112 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import IncrementCounter from "./buttonPage";
+import {
+  fetchHabits,
+  addHabit,
+  deleteHabit,
+  addLog,
+  updateLog,
+} from "@/utils/habitsApi";
 
 const HabitsView = () => {
   const [habits, setHabits] = useState([]);
-  const [currentLogId, setCurrentLogId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchHabits();
+    fetchHabits(setHabits, setLoading, setError);
   }, []);
 
-  const fetchHabits = async () => {
-    try {
-      const response = await fetch("/api/habits/habits");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setHabits(data);
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
-  const addHabit = async ({ ...data }) => {
-    const habitData = {
-      title: data.title,
-      difficulty: data.difficulty,
-      timesPerWeek: data.timesPerWeek,
-      color: data.color,
-    };
-
-    try {
-      const response = await fetch("/api/habits/habits", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(habitData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to add new habit");
-      }
-      fetchHabits();
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const addLog = async (habitId) => {
-    const logData = {
-      habitId: habitId,
-      date: new Date().toISOString(),
-      status: "COMPLETE",
-    };
-
-    try {
-      const response = await fetch("/api/habits/habit_logs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(logData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to add new log");
-      }
-      fetchHabits();
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const handleEditLog = async (logId) => {
-    setCurrentLogId(logId);
-    await updateLog(logId);
-  };
-
-  const updateLog = async (logId) => {
-    const logData = {
-      id: logId,
-      status: "SKIPPED",
-    };
-
-    try {
-      const response = await fetch("/api/habits/habit_logs", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(logData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to edit log");
-      }
-      fetchHabits();
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const deleteHabit = async (habitId) => {
-    try {
-      const response = await fetch("/api/habits/habits", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: habitId }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      fetchHabits();
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  if (loading)
-    return <div className="grid place-content-center">Loading...</div>;
-  if (error)
-    return <div className="grid place-content-center">Error: {error}</div>;
-
   return (
+    // Loading spinner & error message UI
+
     <div className="grid place-content-center flex-col m-auto">
-      <div className="flex flex-col gap-y-4">
-        {habits.length === 0 ? (
-          <div className="text-center">
-            <p>No habits found</p>
-          </div>
-        ) : (
-          <ul className="text-white">
-            {habits.map((habit) => (
-              <>
-                <div className="flex flex-col">
-                  <li key={habit.id}>{habit.title}</li>
-                  <li>
+      {loading ? (
+        <div className="grid place-content-center">Loading...</div>
+      ) : error ? (
+        <div className="grid place-content-center">Error: {error}</div>
+      ) : (
+        // Habits list UI
+
+        // HANDLE NO HABITS
+        <div className="flex flex-col gap-y-4">
+          {habits.length === 0 ? (
+            <div className="text-center">
+              <p>No habits found</p>
+            </div>
+          ) : (
+            <ul className="text-white">
+              {habits.map((habit) => (
+                <li key={habit.id} className="flex flex-col">
+                  {/* HABIT TITLE */}
+                  <div className="text-xl">{habit.title}</div>
+                  {/* HABIT STATUS */}
+                  <div>Status: {habit.dailyLogs[0]?.status}</div>
+                  {/* ADD HABIT STATUS */}
+                  {!habit.dailyLogs[0] && (
                     <button
-                      onClick={() => addLog(habit.id)}
+                      onClick={() =>
+                        addLog(
+                          {
+                            habitId: habit.id,
+                            date: new Date().toISOString(),
+                            status: "COMPLETE",
+                          },
+                          setHabits,
+                          setError
+                        )
+                      }
                       className="mb-4 p-2 bg-blue-500 text-white rounded"
                     >
                       Add Log
                     </button>
+                  )}
+                  {/* EDIT HABIT STATUS */}
+                  {habit.dailyLogs[0] && (
                     <button
-                      onClick={() => deleteHabit(habit.id)}
+                      onClick={() =>
+                        updateLog(
+                          { id: habit.dailyLogs[0]?.id, status: "SKIPPED" },
+                          setHabits,
+                          setError
+                        )
+                      }
                       className="text-xs underline"
                     >
-                      Delete Habit
-                    </button>{" "}
-                  </li>
-                  <li> {habit.dailyLogs?.[0]?.status} </li>
-                  <li>
-                    {habit.dailyLogs &&
-                      habit.dailyLogs.map((log) => (
-                        <button
-                          key={log.id}
-                          onClick={() => handleEditLog(log.id)}
-                          className="text-xs underline"
-                        >
-                          Edit Log
-                        </button>
-                      ))}
-                  </li>
-                </div>
-              </>
-            ))}
-          </ul>
-        )}
-        <div className="flex flex-col">
+                      Edit Log
+                    </button>
+                  )}
+                  {/* DELETE HABIT */}
+                  <button
+                    onClick={() => deleteHabit(habit.id, setHabits, setError)}
+                    className="text-xs underline"
+                  >
+                    Delete Habit
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {/* ADD NEW HABIT */}
           <button
             onClick={() =>
-              addHabit({
-                title: "name",
-                difficulty: "TYPICAL",
-                timesPerWeek: 3,
-                color: "red",
-              })
+              addHabit(
+                {
+                  title: "New Habit",
+                  difficulty: "TYPICAL",
+                  timesPerWeek: 3,
+                  color: "blue",
+                },
+                setHabits,
+                setError
+              )
             }
             className="mb-4 p-2 bg-blue-500 text-white rounded"
           >
             Add New Habit
           </button>
         </div>
-
-        {/* <IncrementCounter /> */}
-      </div>
+      )}
     </div>
   );
 };
