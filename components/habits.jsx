@@ -27,12 +27,12 @@ const HabitsView = () => {
     }
   };
 
-  const addHabit = async () => {
+  const addHabit = async ({ ...data }) => {
     const habitData = {
-      title: "hahaha atsa ena habit",
-      difficulty: "TYPICAL",
-      timesPerWeek: 3,
-      color: "red",
+      title: data.title,
+      difficulty: data.difficulty,
+      timesPerWeek: data.timesPerWeek,
+      color: data.color,
     };
 
     try {
@@ -180,7 +180,14 @@ const HabitsView = () => {
         )}
         <div className="flex flex-col">
           <button
-            onClick={addHabit}
+            onClick={() =>
+              addHabit({
+                title: "name",
+                difficulty: "TYPICAL",
+                timesPerWeek: 3,
+                color: "red",
+              })
+            }
             className="mb-4 p-2 bg-blue-500 text-white rounded"
           >
             Add New Habit
