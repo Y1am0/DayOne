@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState, useRef } from "react";
 import {
   fetchHabits,
@@ -8,67 +9,50 @@ import {
   updateLog,
 } from "@/utils/habitsApi";
 
+import { generateDates } from "@/utils/generateDates";
+import { DateColumn } from "@/components/dateColumn";
+import { HabitsColumn } from "@/components/habitsColumn";
+
 const HabitsView = () => {
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const scrollRef = useRef(null);
-
   const daysToShow = 14;
-  const today = new Date();
-  const dates = Array.from({ length: daysToShow }, (_, i) => {
-    const date = new Date();
-    date.setDate(today.getDate() - i);
-    return {
-      day: date.toLocaleDateString("en-US", { weekday: "short" }), // gets the abbreviated day name
-      date: date.getDate().toString().padStart(2, "0"),
-      isToday:
-        date.getDate() === today.getDate() &&
-        date.getMonth() === today.getMonth() &&
-        date.getFullYear() === today.getFullYear(),
-    };
-  }).reverse();
+  const dates = generateDates(daysToShow);
 
   useEffect(() => {
-    // Check if the scrollable element is available
+    fetchHabits(setHabits, setLoading, setError);
+  }, []);
+
+  useEffect(() => {
     if (scrollRef.current) {
       const { scrollWidth, clientWidth } = scrollRef.current;
       scrollRef.current.scrollLeft = scrollWidth - clientWidth;
     }
   }, [dates]);
 
-  useEffect(() => {
-    fetchHabits(setHabits, setLoading, setError);
-  }, []);
-
   return (
-    <div className=" w-full flex">
-      <div className="flex flex-col w-28 z-10 flex-shrink-0 text-lg pl-4 font-light">
-        <p className="h-16 flex items-center">Habits</p>
-        {habits.map((habit) => (
-          <p key={habit.id} className="text-sm h-16 flex items-center">
-            {habit.title}
-          </p>
-        ))}
-      </div>
+    <div className="w-full flex justify-center">
+      <HabitsColumn habits={habits} />
       <div ref={scrollRef} className="flex overflow-x-scroll">
-        {dates.map((dateObj, index) => (
-          <div
-            key={index}
-            className="place-content-center grid text-center flex-shrink-0 w-16 h-16 text-white"
-          >
-            <div className="font-thin text-sm">{dateObj.day}</div>
-            <div
-              className={`font-medium text-sm py-1 ${
-                dateObj.isToday ? "bg-blue-500 rounded-full" : ""
-              }`}
-            >
-              {dateObj.date}
-            </div>
-          </div>
-        ))}
+        <div className="flex">
+          {dates.map((dateObj) => (
+            <DateColumn
+              key={dateObj.fullDate}
+              dateObj={dateObj}
+              habits={habits}
+              setHabits={setHabits}
+              setError={setError}
+            />
+          ))}
+        </div>
       </div>
+      {/* </div>
+  );
+};
+
+export default HabitsView; */}
 
       {/* //Loading spinner & error message UI */}
       <div className="absolute top-[50%] grid place-content-center flex-col m-auto">
@@ -144,7 +128,7 @@ const HabitsView = () => {
               onClick={() =>
                 addHabit(
                   {
-                    title: "New Habit",
+                    title: "Βούρτσιμα δοντιών",
                     difficulty: "TYPICAL",
                     timesPerWeek: 3,
                     color: "blue",
