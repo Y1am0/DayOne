@@ -13,12 +13,12 @@ export const nextStatus = (currentStatus) => {
 
 // Utility function for Status Style Toggling
 
-export const styleStatus = (currentStatus) => {
+export const styleStatus = (currentStatus, color) => {
   switch (currentStatus) {
     case "COMPLETE":
-      return "bg-blue-500 rounded-full";
+      return `${color} rounded-full`;
     case "PLANNED_SKIP":
-      return "border border-blue-500 rounded-full ";
+      return `rounded-full border`;
     default:
       return "";
   }

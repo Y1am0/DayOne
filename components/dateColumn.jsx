@@ -28,7 +28,7 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
         <div className="font-thin text-sm">{dateObj.day}</div>
         <div
           className={`font-medium text-sm mx-2 ${
-            dateObj.isToday ? "text-white bg-blue-600 rounded-full" : ""
+            dateObj.isToday ? "bg-blue-600 rounded-full" : ""
           }`}
         >
           {dateObj.date}
@@ -44,7 +44,9 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
             className="text-xs h-16 grid place-content-center cursor-pointer"
             onClick={() => handleStatusClick(habit.id, log?.id, log?.status)}
           >
-            <div className={`size-8 ${styleStatus(log?.status)}`}></div>
+            <div
+              className={`size-8 ${styleStatus(log?.status, habit.color)}`}
+            ></div>
           </div>
         );
       })}
