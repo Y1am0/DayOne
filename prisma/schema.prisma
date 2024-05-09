@@ -39,14 +39,13 @@ model Account {
 }
 
 model Habit {
-  id           String     @id @default(cuid())
-  userId       String     @map("user_id")
-  title        String
-  difficulty   Difficulty
-  timesPerWeek Int
-  color        String
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  dailyLogs    DailyLog[]
+  id         String     @id @default(cuid())
+  userId     String     @map("user_id")
+  title      String
+  difficulty Difficulty
+  color      String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyLogs  DailyLog[]
 }
 
 model DailyLog {

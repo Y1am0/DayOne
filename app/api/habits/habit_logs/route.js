@@ -1,4 +1,4 @@
-import { addLog, getHabits, updateLog } from "@/lib/dbHabits";
+import { addLog, updateLog } from "@/lib/dbHabits";
 
 export async function POST(request) {
   try {

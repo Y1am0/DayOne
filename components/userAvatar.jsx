@@ -7,7 +7,7 @@ export default async function UserAvatar() {
   // Ternary operator to conditionally render images
   return session?.user ? (
     <Image
-      className="rounded-full border border-white"
+      className="rounded-full border dark:border-white border-black"
       width={24}
       height={24}
       src={session.user.image}
