@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
 import { PlusIcon } from "@radix-ui/react-icons";
+import { z } from "zod";
 
 import {
   Drawer,
@@ -15,15 +15,33 @@ import {
 } from "@/components/ui/drawer";
 
 import { addHabit } from "@/utils/habitsApi";
+import { Button } from "./ui/button";
+
+const habitSchema = z.object({
+  title: z.string().min(4, "Title must be at least 4 characters"),
+  difficulty: z.enum(["TYPICAL", "HARD", "VERY_HARD"]),
+  color: z.string(),
+});
 
 const NewHabitButton = ({ setHabits, setError }) => {
   const [title, setTitle] = useState("");
   const [difficulty, setDifficulty] = useState("TYPICAL");
   const [color, setColor] = useState("bg-blue-500");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [titleError, setTitleError] = useState("");
 
   const handleSubmit = async () => {
+    setTitleError("");
+    const result = habitSchema.safeParse({ title, difficulty, color });
+    if (!result.success) {
+      setTitleError(result.error.flatten().fieldErrors.title.join(", "));
+      return;
+    }
+
     try {
-      await addHabit({ title, difficulty, color }, setHabits, setError);
+      await addHabit(result.data, setHabits, setError);
+      setIsOpen(false);
     } catch (error) {
       setError(error.message);
       console.error("Failed to add habit:", error.message);
@@ -31,7 +49,7 @@ const NewHabitButton = ({ setHabits, setError }) => {
   };
 
   return (
-    <Drawer>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger className="border flex gap-1 border-blue-500 text-xs py-1 px-2 rounded-md">
         <PlusIcon width={12} /> New habit
       </DrawerTrigger>
@@ -45,10 +63,15 @@ const NewHabitButton = ({ setHabits, setError }) => {
         <div className="p-4 space-y-4">
           <input
             type="text"
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className={`border rounded-md p-2 w-full ${
+              titleError ? "border-red-500" : "border-gray-300"
+            }`}
             placeholder="Title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setTitleError("");
+            }}
           />
 
           <select
@@ -74,9 +97,11 @@ const NewHabitButton = ({ setHabits, setError }) => {
           </div>
         </div>
         <DrawerFooter>
-          <button onClick={handleSubmit}>Submit</button>
+          <Button type="submit" onClick={handleSubmit}>
+            Submit
+          </Button>
           <DrawerClose>
-            <button variant="outline">Cancel</button>
+            <Button variant="outline">Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
