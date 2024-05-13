@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { fetchHabits } from "@/utils/habitsApi";
 import { generateDates } from "@/utils/generateDates";
 import { DateColumn } from "@/components/dateColumn";
 import { HabitsColumn } from "@/components/habitsColumn";
 
-const HabitsView = ({ habits, setHabits, setError }) => {
+const HabitsView = ({ habits, setHabits, setLogs, setError }) => {
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
   const daysToShow = 14;
-  const dates = generateDates(daysToShow);
+
+  const dates = useMemo(() => generateDates(daysToShow), [daysToShow]);
+
   useEffect(() => {
     fetchHabits(setHabits, setLoading, setError);
   }, []);
@@ -20,7 +22,7 @@ const HabitsView = ({ habits, setHabits, setError }) => {
       const { scrollWidth, clientWidth } = scrollRef.current;
       scrollRef.current.scrollLeft = scrollWidth - clientWidth;
     }
-  }, [dates]);
+  }, [dates]); // This useEffect now only triggers if dates actually changes
 
   return (
     <div className="w-full flex justify-center">
@@ -43,56 +45,3 @@ const HabitsView = ({ habits, setHabits, setError }) => {
 };
 
 export default HabitsView;
-
-// {/* //Loading spinner & error message UI
-// <div className="absolute top-[50%] grid place-content-center flex-col m-auto">
-//   {loading ? (
-//     <div className="grid place-content-center">Loading...</div>
-//   ) : error ? (
-//     <div className="grid place-content-center">Error: {error}</div>
-//   ) : (
-//     // Habits list UI
-
-//     // HANDLE NO HABITS
-//     <div className="flex flex-col gap-y-4">
-//       {habits.length === 0 ? (
-//         <div className="text-center">
-//           <p>No habits found</p>
-//         </div>
-//       ) : (
-//         <ul className="text-white">
-//           {habits.map((habit) => (
-//             <li key={habit.id} className="flex flex-col">
-//               {/* HABIT TITLE */}
-//               <div className="text-xl">{habit.title}</div>
-//               {/* DELETE HABIT */}
-//               <button
-//                 onClick={() => deleteHabit(habit.id, setHabits, setError)}
-//                 className="text-xs underline"
-//               >
-//                 Delete Habit
-//               </button>
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//       {/* ADD NEW HABIT */}
-//       <button
-//         onClick={() =>
-//           addHabit(
-//             {
-//               title: "Βούρτσιμα δοντιών",
-//               difficulty: "TYPICAL",
-//               color: "red-500",
-//             },
-//             setHabits,
-//             setError
-//           )
-//         }
-//         className="mb-4 p-2 bg-blue-500 text-white rounded"
-//       >
-//         Add New Habit
-//       </button>
-//     </div>
-//   )}
-// </div>

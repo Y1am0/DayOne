@@ -23,19 +23,34 @@ const habitSchema = z.object({
   color: z.string(),
 });
 
+const habitColors = [
+  "#ef4444",
+  "#22c55e",
+  "#3b82f6",
+  "#eab308",
+  "#f97316",
+  "#a855f7",
+  "#64748b",
+];
+
 const NewHabitButton = ({ setHabits, setError }) => {
   const [title, setTitle] = useState("");
   const [difficulty, setDifficulty] = useState("TYPICAL");
-  const [color, setColor] = useState("bg-blue-500");
+  const [color, setColor] = useState("#3b82f6");
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [titleError, setTitleError] = useState("");
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     setTitleError("");
     const result = habitSchema.safeParse({ title, difficulty, color });
     if (!result.success) {
       setTitleError(result.error.flatten().fieldErrors.title.join(", "));
+      setIsSubmitting(false);
       return;
     }
 
@@ -45,6 +60,8 @@ const NewHabitButton = ({ setHabits, setError }) => {
     } catch (error) {
       setError(error.message);
       console.error("Failed to add habit:", error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -85,19 +102,20 @@ const NewHabitButton = ({ setHabits, setError }) => {
           </select>
 
           <div className="flex gap-2">
-            {["bg-red-500", "bg-green-500", "bg-blue-500", "bg-yellow-500"].map(
-              (c) => (
-                <button
-                  key={c}
-                  className={`h-8 w-8 rounded-full ${c}`}
-                  onClick={() => setColor(c)}
-                />
-              )
-            )}
+            {habitColors.map((c) => (
+              <button
+                key={c}
+                style={{ backgroundColor: c }}
+                className={`h-8 w-8 rounded-full ${
+                  color === c && "border-white border-2"
+                }`}
+                onClick={() => setColor(c)}
+              />
+            ))}
           </div>
         </div>
         <DrawerFooter>
-          <Button type="submit" onClick={handleSubmit}>
+          <Button type="submit" onClick={handleSubmit} disabled={isSubmitting}>
             Submit
           </Button>
           <DrawerClose>

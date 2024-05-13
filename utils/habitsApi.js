@@ -17,6 +17,21 @@ export const fetchHabits = async (setHabits, setLoading, setError) => {
   }
 };
 
+export const fetchLogs = async (habitId, setLogs, setLoading, setError) => {
+  try {
+    const response = await fetch(`${baseUrl}/habit_logs/?habitId=${habitId}`);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    setLogs(data);
+  } catch (error) {
+    setError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 export const addHabit = async (habitData, setHabits, setError) => {
   try {
     const response = await fetch(`${baseUrl}/habits`, {
@@ -88,6 +103,24 @@ export const addLog = async (logData, setHabits, setError) => {
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || "Failed to add new log");
+    }
+    await fetchHabits(setHabits, () => {}, setError);
+  } catch (error) {
+    setError(error.message);
+  }
+};
+
+export const deleteLog = async (logId, setHabits, setError) => {
+  try {
+    const response = await fetch(`${baseUrl}/habit_logs`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(logId),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
     await fetchHabits(setHabits, () => {}, setError);
   } catch (error) {

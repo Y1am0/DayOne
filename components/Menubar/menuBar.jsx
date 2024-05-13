@@ -8,7 +8,7 @@ const MenuBar = () => {
   // const user = session.data?.user;
 
   return (
-    <div className="h-36 fixed bottom-0 z-10 w-full flex justify-around">
+    <div className="h-36 fixed bg-background bottom-0 z-10 w-full flex justify-around">
       <button>
         <UserAvatar />
       </button>

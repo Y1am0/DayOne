@@ -49,11 +49,12 @@ model Habit {
 }
 
 model DailyLog {
-  id      String   @id @default(cuid())
-  habitId String   @map("habit_id")
-  date    DateTime
-  status  Status
-  habit   Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  id              String   @id @default(cuid())
+  habitId         String   @map("habit_id")
+  date            DateTime
+  status          Status
+  consecutiveDays Int?     @default(0)
+  habit           Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
 }
 
 enum Difficulty {

@@ -1,11 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
+import LogoIcon from "../icons/logoIcon";
 
 const Header = () => {
   return (
-    <div className="h-36 top-0 fixed z-10 w-full flex items-center justify-center">
+    <div className="h-36 top-0 fixed z-10 w-full bg-background flex items-center justify-center">
       <Link href="/">
-        <Image src={"/logo.png"} width={27} height={38} alt="Logo" />
+        <LogoIcon />
       </Link>
     </div>
   );
