@@ -58,7 +58,9 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
             <div
               style={styleStatus(log?.status, habit.color)}
               className="size-8"
-            ></div>
+            >
+              {log?.status === "COMPLETE" && log?.consecutiveDays}
+            </div>
           </div>
         );
       })}
