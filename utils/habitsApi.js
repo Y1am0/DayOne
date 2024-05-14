@@ -10,6 +10,7 @@ export const fetchHabits = async (setHabits, setLoading, setError) => {
     }
     const data = await response.json();
     setHabits(data);
+    console.log(data);
   } catch (error) {
     setError(error.message);
   } finally {
@@ -55,6 +56,7 @@ export const addHabit = async (habitData, setHabits, setError) => {
 export const deleteHabit = async (habitId, setHabits, setError) => {
   try {
     const response = await fetch(`${baseUrl}/habits`, {
+      cache: "force-cache",
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

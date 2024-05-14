@@ -6,7 +6,7 @@ import { generateDates } from "@/utils/generateDates";
 import { DateColumn } from "@/components/dateColumn";
 import { HabitsColumn } from "@/components/habitsColumn";
 
-const HabitsView = ({ habits, setHabits, setLogs, setError }) => {
+const HabitsView = ({ habits, setHabits, setError }) => {
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
   const daysToShow = 14;
@@ -15,7 +15,7 @@ const HabitsView = ({ habits, setHabits, setLogs, setError }) => {
 
   useEffect(() => {
     fetchHabits(setHabits, setLoading, setError);
-  }, []);
+  }, [setHabits, setError]);
 
   useEffect(() => {
     if (scrollRef.current) {
