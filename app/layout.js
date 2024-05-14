@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
       ></meta>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex flex-col h-screen">
+          <div className="flex flex-col min-h-screen">
             <Header />
             <div className="dark h-full py-36 overflow-y-scroll">
               {children}

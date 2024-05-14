@@ -1,15 +1,12 @@
 import { nextStatus, styleStatus } from "@/utils/statusHelpers";
-import { updateLog, addLog } from "@/utils/habitsApi";
+import { updateLog, addLog, deleteLog } from "@/utils/habitsApi";
 
 // Component to render each date column
 export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
   // TODO [] implement optimistic updates here!
 
   const handleStatusClick = async (habitId, logId, currentStatus) => {
-    if (logId && currentStatus) {
-      const newStatus = nextStatus(currentStatus);
-      updateLog({ id: logId, status: newStatus }, setHabits, setError);
-    } else {
+    if (!logId) {
       addLog(
         {
           habitId: habitId,
@@ -19,16 +16,30 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
         setHabits,
         setError
       );
+      return;
+    }
+
+    const newStatus = nextStatus(currentStatus);
+
+    if (newStatus === "SKIPPED") {
+      deleteLog(logId, setHabits, setError);
+    } else {
+      updateLog({ id: logId, status: newStatus }, setHabits, setError);
     }
   };
 
   return (
-    <div className="flex flex-col text-center flex-shrink-0 w-16">
-      <div className="h-16 flex flex-col justify-center">
-        <div className="font-thin text-sm">{dateObj.day}</div>
+    <div className={`flex flex-col text-center flex-shrink-0 w-16`}>
+      <div
+        className={`h-16 flex flex-col justify-center ${
+          dateObj.isToday &&
+          "bg-gradient-to-t from-transparent from-35% to-[#3b82f630] to-100% rounded-t-full"
+        }`}
+      >
+        <div className="font-light text-sm">{dateObj.day}</div>
         <div
           className={`font-medium text-sm mx-2 ${
-            dateObj.isToday ? "bg-blue-600 rounded-full" : ""
+            dateObj.isToday ? "text-white bg-blue-600 rounded-full" : ""
           }`}
         >
           {dateObj.date}
@@ -36,7 +47,7 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
       </div>
       {habits.map((habit) => {
         const log = habit.dailyLogs.find(
-          (log) => log.date.split("T")[0] === dateObj.calDate
+          (log) => log.date.split("T")[0] === dateObj.fullDate.split("T")[0]
         );
         return (
           <div
@@ -45,8 +56,15 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
             onClick={() => handleStatusClick(habit.id, log?.id, log?.status)}
           >
             <div
-              className={`size-8 ${styleStatus(log?.status, habit.color)}`}
-            ></div>
+              style={styleStatus(
+                log?.status,
+                habit.color,
+                log?.consecutiveDays
+              )}
+              className="size-8 grid font-medium text-background place-content-center"
+            >
+              {log?.status === "COMPLETE" && log?.consecutiveDays}
+            </div>
           </div>
         );
       })}
