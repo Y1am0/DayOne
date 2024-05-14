@@ -56,8 +56,12 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
             onClick={() => handleStatusClick(habit.id, log?.id, log?.status)}
           >
             <div
-              style={styleStatus(log?.status, habit.color)}
-              className="size-8"
+              style={styleStatus(
+                log?.status,
+                habit.color,
+                log?.consecutiveDays
+              )}
+              className="size-8 grid font-medium text-background place-content-center"
             >
               {log?.status === "COMPLETE" && log?.consecutiveDays}
             </div>
