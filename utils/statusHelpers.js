@@ -1,3 +1,13 @@
+export const habitColors = [
+  "#ef4444",
+  "#22c55e",
+  "#3b82f6",
+  "#eab308",
+  "#f97316",
+  "#a855f7",
+  "#64748b",
+];
+
 export const nextStatus = (currentStatus) => {
   switch (currentStatus) {
     case "COMPLETE":
@@ -9,13 +19,7 @@ export const nextStatus = (currentStatus) => {
   }
 };
 
-const calculateLuminance = (consecutiveDays) => {
-  // Ensure the luminance value stays within the 5% to 100% range
-  const luminance = Math.min(100, 5 + (consecutiveDays - 1) * (95 / 20));
-  return luminance;
-};
-
-export const styleStatus = (currentStatus, color, consecutiveDays) => {
+export const styleStatus = (currentStatus, color) => {
   switch (currentStatus) {
     case "COMPLETE":
       return {
