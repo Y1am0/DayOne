@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { habitColors } from "@/utils/statusHelpers";
 import { z } from "zod";
 
 import {
@@ -22,16 +23,6 @@ const habitSchema = z.object({
   difficulty: z.enum(["TYPICAL", "HARD", "VERY_HARD"]),
   color: z.string(),
 });
-
-const habitColors = [
-  "#ef4444",
-  "#22c55e",
-  "#3b82f6",
-  "#eab308",
-  "#f97316",
-  "#a855f7",
-  "#64748b",
-];
 
 const NewHabitButton = ({ setHabits, setError }) => {
   const [title, setTitle] = useState("");
