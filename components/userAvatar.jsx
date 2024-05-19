@@ -1,11 +1,9 @@
-import { auth } from "@/auth";
 import Image from "next/image";
 
-export default async function UserAvatar() {
-  const session = await auth();
-
+export default function UserAvatar({ session }) {
   // Ternary operator to conditionally render images
-  return session?.user ? (
+
+  return session ? (
     <Image
       className="rounded-full border dark:border-white border-black"
       width={24}
