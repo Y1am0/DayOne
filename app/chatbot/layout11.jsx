@@ -4,6 +4,8 @@ import "../globals.css";
 
 export default function ChatbotLayout({ children }) {
     return (
+
+
         <html lang="en">
             <body >
 

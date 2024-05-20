@@ -3,7 +3,7 @@ import { authenticate } from "@/utils/authenticate";
 
 export async function GET(request) {
   try {
-    const userSession = await authenticate(request);
+    const userSession = await authenticate();
     const habits = await getHabits(userSession.user.id);
 
     return new Response(JSON.stringify(habits), {

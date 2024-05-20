@@ -21,6 +21,7 @@ export default function Chatbot() {
 
       <form
         action={async () => {
+
           setInput("");
 
           setConversation((currentConversation) => [
