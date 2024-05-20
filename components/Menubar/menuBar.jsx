@@ -12,11 +12,8 @@ const MenuBar = () => {
       <button>
         <OverviewIcon />
       </button>
-
       <button>
-        <Link href="/settings">
-          <SettingsIcon />
-        </Link>
+        <SettingsIcon />
       </button>
     </div>
   );

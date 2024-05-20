@@ -31,7 +31,7 @@ export const HabitsColumn = ({ habits, setHabits, setError }) => {
           // onClick={() => deleteHabit(habit.id, setHabits, setError)}
           // onClick={() => openEditHabit(habit)}
           key={habit.id}
-          className="text-sm h-16 flex items-center"
+          className="text-sm h-16 flex items-center text-left"
         >
           {habit.title.length > 18
             ? habit.title.substr(0, 18) + "\u2026"

@@ -9,13 +9,14 @@ import { HabitsColumn } from "@/components/habitsColumn";
 const HabitsView = ({ habits, setHabits, setError }) => {
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
-  const daysToShow = 14;
-
-  const dates = useMemo(() => generateDates(daysToShow), [daysToShow]);
 
   useEffect(() => {
     fetchHabits(setHabits, setLoading, setError);
   }, [setHabits, setError]);
+
+  const daysToShow = 365;
+
+  const dates = useMemo(() => generateDates(daysToShow), [daysToShow]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -25,7 +26,7 @@ const HabitsView = ({ habits, setHabits, setError }) => {
   }, [dates]); // This useEffect now only triggers if dates actually changes
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full py-4 px-4 2xl:px-72 flex justify-center ">
       <HabitsColumn habits={habits} setHabits={setHabits} setError={setError} />
       <div ref={scrollRef} className="flex overflow-x-scroll">
         <div className="flex">

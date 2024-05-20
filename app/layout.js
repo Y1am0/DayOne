@@ -13,7 +13,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning={true} lang="en">
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta
         name="apple-mobile-web-app-status-bar-style"
@@ -22,11 +22,13 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="flex flex-col min-h-screen">
-            <Header />
-            <div className="dark h-full py-36 overflow-y-scroll">
-              <AI>{children}</AI>
-            </div>
-            <MenuBar />
+            <AI>
+              <Header />
+              <div className="dark h-full py-36 overflow-y-scroll">
+                {children}
+              </div>
+              <MenuBar />
+            </AI>
           </div>
         </ThemeProvider>
       </body>
