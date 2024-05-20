@@ -48,7 +48,7 @@ export const addHabit = async (habitData, setHabits, setError) => {
       const errorData = await response.json();
       throw new Error(errorData.error || "Failed to add new habit");
     }
-    await fetchHabits(setHabits, () => {}, setError);
+    await fetchHabits(setHabits, () => { }, setError);
   } catch (error) {
     setError(error.message);
   }
@@ -68,7 +68,7 @@ export const editHabit = async (habitData, setHabits, setError) => {
       const errorData = await response.json();
       throw new Error(errorData.error || "Failed to edit habit");
     }
-    await fetchHabits(setHabits, () => {}, setError);
+    await fetchHabits(setHabits, () => { }, setError);
   } catch (error) {
     setError(error.message);
   }
@@ -87,11 +87,12 @@ export const deleteHabit = async (habitId, setHabits, setError) => {
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    await fetchHabits(setHabits, () => {}, setError);
+    await fetchHabits(setHabits, () => { }, setError);
   } catch (error) {
     setError(error.message);
   }
 };
+
 
 export const updateLog = async (logData, setHabits, setError) => {
   try {
@@ -107,7 +108,7 @@ export const updateLog = async (logData, setHabits, setError) => {
       const errorData = await response.json();
       throw new Error(errorData.error || "Failed to edit log");
     }
-    await fetchHabits(setHabits, () => {}, setError);
+    await fetchHabits(setHabits, () => { }, setError);
   } catch (error) {
     setError(error.message);
   }
@@ -127,7 +128,7 @@ export const addLog = async (logData, setHabits, setError) => {
       const errorData = await response.json();
       throw new Error(errorData.error || "Failed to add new log");
     }
-    await fetchHabits(setHabits, () => {}, setError);
+    await fetchHabits(setHabits, () => { }, setError);
   } catch (error) {
     setError(error.message);
   }
@@ -145,7 +146,7 @@ export const deleteLog = async (logId, setHabits, setError) => {
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    await fetchHabits(setHabits, () => {}, setError);
+    await fetchHabits(setHabits, () => { }, setError);
   } catch (error) {
     setError(error.message);
   }

@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Menubar/header";
 import MenuBar from "@/components/Menubar/menuBar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AI } from "@/app/actions";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -12,7 +13,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning={true} lang="en">
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta
         name="apple-mobile-web-app-status-bar-style"
@@ -21,11 +22,13 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="flex flex-col min-h-screen">
-            <Header />
-            <div className="dark h-full py-36 overflow-y-scroll">
-              <div>{children}</div>
-            </div>
-            <MenuBar />
+            <AI>
+              <Header />
+              <div className="dark h-full py-36 overflow-y-scroll">
+                {children}
+              </div>
+              <MenuBar />
+            </AI>
           </div>
         </ThemeProvider>
       </body>
