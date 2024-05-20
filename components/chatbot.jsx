@@ -13,8 +13,8 @@ export default function Chatbot() {
   const { continueConversation } = useActions();
 
   return (
-    <div className="absolute bottom-32 h-full left-3/4 transform -translate-x-1/2 w-3/12 border rounded-xl z-50">
-      <div className="flex h-3/4 flex-col">
+    <div className="cursor-default absolute bottom-32  left-3/4 transform -translate-x-1/2 w-3/12 border rounded-xl z-50">
+      <div className="flex h-96 flex-col">
         <header className="flex rounded-t-xl items-center justify-between bg-background px-4 py-3 text-white shadow-md">
           <div className="flex items-center gap-3">
             <Avatar>
@@ -29,9 +29,8 @@ export default function Chatbot() {
             {conversation.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${
-                  message.role === "user" ? "justify-end" : "items-start gap-3"
-                }`}
+                className={`flex ${message.role === "user" ? "justify-end" : "items-start gap-3"
+                  }`}
               >
                 {message.role !== "user" && (
                   <Avatar>
@@ -40,11 +39,10 @@ export default function Chatbot() {
                   </Avatar>
                 )}
                 <div
-                  className={`max-w-[70%] rounded-lg p-3 text-sm ${
-                    message.role === "user"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-100 dark:bg-gray-800"
-                  }`}
+                  className={`max-w-[70%] rounded-lg p-3 text-sm ${message.role === "user"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 dark:bg-gray-800"
+                    }`}
                 >
                   <p>{message.display}</p>
                 </div>
