@@ -1,36 +1,57 @@
 "use server";
 
-import { generateText, streamText } from "ai";
+import { createAI, getMutableAIState, streamUI } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
+import { nanoid } from "nanoid";
 import { z } from "zod";
 
-export async function continueConversation(history) {
-  const { text, toolResults } = await streamText({
-    model: openai("gpt-4o"),
-    system: "You are a friendly assistant!",
-    messages: history,
-    tools: {
-      celsiusToFahrenheit: {
-        description: "Converts celsius to fahrenheit",
-        parameters: z.object({
-          value: z.string().describe("The value in celsius"),
-        }),
-        execute: async ({ value }) => {
-          const celsius = parseFloat(value);
-          const fahrenheit = celsius * (9 / 5) + 32;
-          return `${celsius}°C is ${fahrenheit.toFixed(2)}°F`;
-        },
-      },
-    },
-  });
+export async function continueConversation(input) {
 
-  return {
-    messages: [
-      ...history,
-      {
+
+    const history = getMutableAIState();
+
+    const result = await streamUI({
+        model: openai("gpt-4o"),
+        system:
+            "you are a spotify api expert and you are helping me add song playback when i ask you to play a song",
+        messages: [...history.get(), { role: "user", content: input }],
+        text: ({ content, done }) => {
+            if (done) {
+                history.done((messages) => [
+                    ...messages,
+                    { role: "assistant", content },
+                ]);
+            }
+            return content;
+        },
+        tools: {
+            celsiusToFahrenheit: {
+                description: "Converts celsius to fahrenheit",
+                parameters: z.object({
+                    value: z.string().describe("The value in celsius"),
+                }),
+                generate: async function* ({ value }) {
+                    yield "Waiting for the result...";
+                    const celsius = parseFloat(value);
+                    const fahrenheit = celsius * (9 / 5) + 32;
+                    await new Promise((resolve) => setTimeout(resolve, 2000));
+                    return `${celsius}°C is ${fahrenheit.toFixed(2)}°F`;
+                },
+            },
+        },
+    });
+
+    return {
+        id: nanoid(),
         role: "assistant",
-        content: text,
-      },
-    ],
-  };
+        display: result.value,
+    };
 }
+
+export const AI = createAI({
+    actions: {
+        continueConversation,
+    },
+    initialAIState: [],
+    initialUIState: [],
+});

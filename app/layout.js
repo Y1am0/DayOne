@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Menubar/header";
 import MenuBar from "@/components/Menubar/menuBar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AI } from "@/app/actions";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -23,7 +24,7 @@ export default function RootLayout({ children }) {
           <div className="flex flex-col min-h-screen">
             <Header />
             <div className="dark h-full py-36 overflow-y-scroll">
-              <div>{children}</div>
+              <AI>{children}</AI>
             </div>
             <MenuBar />
           </div>
