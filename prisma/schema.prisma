@@ -39,22 +39,22 @@ model Account {
 }
 
 model Habit {
-  id           String     @id @default(cuid())
-  userId       String     @map("user_id")
-  title        String
-  difficulty   Difficulty
-  timesPerWeek Int
-  color        String
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  dailyLogs    DailyLog[]
+  id         String     @id @default(cuid())
+  userId     String     @map("user_id")
+  title      String
+  difficulty Difficulty
+  color      String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyLogs  DailyLog[]
 }
 
 model DailyLog {
-  id      String   @id @default(cuid())
-  habitId String   @map("habit_id")
-  date    DateTime
-  status  Status
-  habit   Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  id              String   @id @default(cuid())
+  habitId         String   @map("habit_id")
+  date            DateTime
+  status          Status
+  consecutiveDays Int?     @default(0)
+  habit           Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
 }
 
 enum Difficulty {
