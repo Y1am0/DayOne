@@ -1,5 +1,5 @@
 import { nextStatus, styleStatus } from "@/utils/statusHelpers";
-import { updateLog, addLog, deleteLog } from "@/utils/habitsApi";
+import { updateLog, addLog, deleteLog, editHabit } from "@/utils/habitsApi";
 
 // Component to render each date column
 export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
@@ -16,6 +16,7 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
         setHabits,
         setError
       );
+      // editHabit(habitId, { points: points + 3 }, setHabits, setError);
       return;
     }
 
@@ -38,7 +39,7 @@ export const DateColumn = ({ dateObj, habits, setHabits, setError }) => {
       >
         <div className="font-light text-sm">{dateObj.day}</div>
         <div
-          className={`font-medium text-sm mx-2 ${
+          className={`font-medium text-sm mx-2${
             dateObj.isToday ? "text-white bg-blue-600 rounded-full" : ""
           }`}
         >
